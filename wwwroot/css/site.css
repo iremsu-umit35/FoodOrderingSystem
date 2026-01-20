@@ -1,0 +1,262 @@
+/* ======================================= */
+/* 1. GENEL AYARLAR VE BODY YAPISI */
+/* ======================================= */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f8f8f8;
+    /* Navbar'ýn sabitlenmesi nedeniyle sayfanýn üstüne boþluk býrakýlmalý */
+    padding-top: 66px;
+    min-height: 100vh;
+}
+
+/* ======================================= */
+/* 2. NAVBAR (ÜSTTE SABÝT) */
+/* ======================================= */
+nav {
+    /* Navbar'ý sayfanýn en üstüne sabitle */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000; /* Diðer her þeyin üstünde olmasýný saðlar */
+
+    background-color: white;
+    padding: 15px 30px;
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    border-bottom: 1px solid #ddd;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Hafif gölgeyi artýrdýk */
+    box-sizing: border-box; /* Padding'in geniþliði etkilememesini saðlar */
+}
+
+    nav .logo {
+        font-size: 22px;
+        font-weight: bold;
+        color: #ff1744;
+        text-decoration: none;
+    }
+
+    nav .menu {
+        margin-left: auto;
+        display: flex;
+        gap: 15px;
+        align-items: center;
+    }
+
+        nav .menu a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+            nav .menu a:hover {
+                color: #ff1744;
+            }
+
+    nav .register-btn {
+        background-color: #ff1744;
+        color: white;
+        padding: 8px 14px;
+        border-radius: 6px;
+        transition: background 0.3s;
+    }
+
+        nav .register-btn:hover {
+            background-color: #e0133b;
+        }
+
+    nav .lang-selector {
+        cursor: pointer;
+    }
+
+    nav .cart-icon {
+        font-size: 20px;
+    }
+
+/* ======================================= */
+/* 3. BANNER VE CONTAINER */
+/* ======================================= */
+.banner {
+    /* Banner, Navbar'ýn altýnda görünmelidir */
+    height: 350px;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+    .banner h1 {
+        color: white;
+        font-size: 32px;
+        text-shadow: 0 0 10px black;
+        text-align: center;
+    }
+
+.container {
+    padding: 20px;
+}
+
+
+/* ======================================= */
+/* 4. KAYIT FORMU ÖZEL STÝLLERÝ */
+/* ======================================= */
+
+/* Formun ortalanmasýný saðlamak için global body ayarlarýný devre dýþý býrakýyoruz. */
+/* Kayýt formu içeriðini saran div'i düzenliyoruz. */
+.register-page-wrapper {
+    /* Navbar'ýn altýnda kalan dikey alaný kapla ve formu ortala */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* min-height: calc(100vh - 66px); /* Navbar yüksekliði kadar çýkarýlýr */
+    padding-bottom: 50px; /* Altta boþluk býrakýr */
+}
+
+/* Form Konteyneri */
+.form-container {
+    background-color: #ffffff;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 450px; /* Formun maksimum geniþliði */
+    margin: 20px auto;
+}
+
+h2 {
+    color: #333;
+    text-align: center;
+    margin-bottom: 25px;
+    font-weight: 600;
+    border-bottom: 2px solid #ff4757;
+    display: inline-block;
+    padding-bottom: 5px;
+}
+
+/* Form Etiketleri ve Giriþ Alanlarý */
+#registerForm > div {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    color: #555;
+    font-weight: 500;
+    font-size: 0.9em;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="tel"],
+select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+    transition: border-color 0.3s;
+    font-size: 1em;
+}
+
+    input:focus, select:focus {
+        border-color: #ff4757;
+        outline: none;
+        box-shadow: 0 0 5px rgba(255, 71, 87, 0.2);
+    }
+
+/* Buton Stili */
+button[type="submit"] {
+    background-color: #ff4757;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: 600;
+    width: 100%;
+    margin-top: 10px;
+    transition: background-color 0.3s, transform 0.1s;
+}
+
+    button[type="submit"]:hover {
+        background-color: #e03c4a;
+        transform: translateY(-1px);
+    }
+
+/* Alert Mesajý */
+.alert {
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+    text-align: center;
+    font-weight: bold;
+    color: #c0392b;
+    background-color: #fbeed5;
+    border: 1px solid #f99097;
+}
+
+/* Hata Mesajý Stili */
+.error-message {
+    color: #ff4757;
+    font-size: 0.8em;
+    margin-top: 5px;
+    display: none;
+}
+
+/* ======================================= */
+/* 5. RESPONSIVE AYARLAR */
+/* ======================================= */
+@media (max-width: 768px) {
+    /* Navbar mobil görünümü */
+    nav {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 10px 15px;
+    }
+
+        nav .menu {
+            flex-direction: column;
+            gap: 10px;
+            width: 100%;
+            margin-top: 10px;
+        }
+    /* Mobil cihazlarda sabit Navbar yüksekliði arttýðý için padding'i ayarla */
+    body {
+        padding-top: 180px; /* Yaklaþýk yeni navbar yüksekliði */
+    }
+}
+
+/*görsel özellikleri*/
+
+.ys-hero-banner {
+    /* Görsel özelliklerini HTML'den alýyoruz, burada boyutlandýrma ve yerleþim yapýlýr */
+    background-size: cover; /* Resmin div'i tamamen kaplamasýný saðlar */
+    background-position: center center; /* Resmi ortalar */
+    background-repeat: no-repeat;
+    height: 400px; /* Görseldeki yüksekliðe ayarlandý */
+    /* Metin Yerleþimi ve Görünürlüðü */
+    display: flex; /* Ýçeriði hizalamak için flexbox */
+    align-items: center; /* Dikeyde ortalar */
+    justify-content: center; /* Yatayda ortalar */
+    text-align: center;
+    color: white; /* Metin rengi */
+    text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.8); /* Metnin görünürlüðü artýrýldý */
+    padding: 20px;
+    margin-bottom: 40px;
+}
+
+    .ys-hero-banner h1 {
+        /* Metin stilini görseldeki gibi kalýn ve büyük yapar */
+        font-size: 2.5em;
+        font-weight: 700;
+        line-height: 1.2;
+        margin: 0;
+    }

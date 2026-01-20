@@ -1,0 +1,85 @@
+﻿@inject IHttpContextAccessor HttpContextAccessor
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewData["Title"] - TurnaFood</title>
+
+    <link rel="stylesheet" href="~/css/user-home.css" />
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="user-navbar">
+        <div class="nav-container">
+
+            <!-- Logo -->
+            <a class="nav-logo" href="/Home/Index">TurnaFood</a>
+
+            <!-- Sağ Menü -->
+            <div class="nav-right">
+
+                <!-- Dil -->
+                <div class="nav-dropdown">
+                    <span class="dropdown-toggle">TR</span>
+                    <ul class="dropdown-menu">
+                        <li>TR</li>
+                        <li>EN</li>
+                    </ul>
+                </div>
+
+                <!-- Sepet -->
+                <a class="nav-cart" href="/User/Cart">
+                    🛒
+                </a>
+
+                <!-- Kullanıcı -->
+                <div class="nav-dropdown">
+                    <span class="dropdown-toggle">
+                        @HttpContextAccessor.HttpContext.Session.GetString("UserFullName")
+                    </span>
+
+                    <ul class="dropdown-menu dropdown-right">
+                        <li><a href="/User/Wallet">Wallet-not page</a></li>
+                        <li><a href="/User/Orders">My Orders</a></li>
+                        <li><a href="/User/Profile">My Account- not page</a></li>
+                        <li><a href="/User/Coupons">My coupon-not page</a></li>
+                        <li><a href="/Home/Help">Help-not page</a></li>
+
+                        <li class="divider"></li>
+
+                        <li><a class="danger" href="/Account/Logout">Log Out</a></li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+    </nav>
+
+    <div class="page-content">
+        @RenderBody()
+    </div>
+    <script>
+        document.querySelector(".nav-cart")?.addEventListener("click", function () {
+            let panel = document.querySelector(".cart-panel");
+            let overlay = document.querySelector(".cart-overlay");
+
+            if (panel) panel.classList.add("open");
+            if (overlay) overlay.classList.add("show");
+        });
+
+        // Karanlık alana tıklayınca panel kapansın
+        document.addEventListener("click", function (e) {
+            if (e.target.classList.contains("cart-overlay")) {
+                document.querySelector(".cart-panel")?.classList.remove("open");
+                document.querySelector(".cart-overlay")?.classList.remove("show");
+            }
+        });
+    </script>
+
+    <script src="~/js/user-home.js"></script>
+
+</body>
+</html>

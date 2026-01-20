@@ -1,0 +1,291 @@
+﻿@model FoodOrderingSystem.Models.ViewModels.OrderGroupedViewModel
+@{
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    ViewData["Title"] = "Siparişler";
+}
+
+
+<h2>📦 Orders</h2>
+
+
+<!-- PREPARING -->
+<div class="order-box">
+    <div class="title"><span>🟡</span> Preparing Orders</div>
+
+    @if (!Model.Preparing.Any())
+    {
+        <p> No preparing order.</p>
+    }
+    else
+    {
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    
+                    <th>User</th>
+                    <th>Rstaurant</th>
+                    <th>Date</th>
+                 
+                    <th>State</th>
+                    <th>Detail</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var o in Model.Preparing)
+                {
+                    <tr>
+                        
+                        <td>@o.User.FullName</td>
+                        <td>@o.Restaurant.RestaurantName</td>
+                        <td>@o.OrderDate.ToString("dd MMM yyyy HH:mm")</td>
+                       
+                        <td><span class="badge badge-preparing">Preparing</span></td>
+                        <!--see ye tıkladığında hazırlamkata olan sipaişlerin detaylarını gösterir-->
+                        <td><a asp-action="OrderDetails" asp-route-id="@o.OrderId" class="btn btn-primary btn-sm">See</a></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
+
+
+
+<!-- ON THE WAY -->
+<div class="order-box">
+    <div class="title"><span>🔵</span>On the Way Orders</div>
+
+    @if (!Model.OnTheWay.Any())
+    {
+        <p> No on the way order.</p>
+    }
+    else
+    {
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                   
+                    <th>User</th>
+                    <th>Rstaurant</th>
+                    <th>Date</th>
+                   
+                    <th>State</th>
+                    <th>Detail</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var o in Model.OnTheWay)
+                {
+                    <tr>
+                        
+                        <td>@o.User.FullName</td>
+                        <td>@o.Restaurant.RestaurantName</td>
+                        <td>@o.OrderDate.ToString("dd MMM yyyy HH:mm")</td>
+                        <!--see ye tıkladığında yolda olan sipaişlerin detaylarını gösterir-->
+
+                        <td><span class="badge badge-ontheway">On The Way</span></td>
+                        <td><a asp-action="OrderDetails" asp-route-id="@o.OrderId" class="btn btn-primary btn-sm">See</a></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
+
+
+
+<!-- DELIVERED -->
+<div class="order-box">
+    <div class="title"><span>🟢</span> Delevered Orders</div>
+
+    @if (!Model.Delivered.Any())
+    {
+        <p>No delevered order.</p>
+    }
+    else
+    {
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                   
+                    <th>User</th>
+                    <th>Rstaurant</th>
+                    <th>Date</th>
+                 
+                    <th>State</th>
+                    <th>Detail</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var o in Model.Delivered)
+                {
+                    <tr>
+                       
+                        <td>@o.User.FullName</td>
+                        <td>@o.Restaurant.RestaurantName</td>
+                        <td>@o.OrderDate.ToString("dd MMM yyyy HH:mm")</td>
+                        <!--see ye tıkladığında ulaşılan olan sipaişlerin detaylarını gösterir-->
+
+                        <td><span class="badge badge-delivered">Delivered</span></td>
+                        <td><a asp-action="OrderDetails" asp-route-id="@o.OrderId" class="btn btn-primary btn-sm">See</a></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
+
+
+
+<!-- CANCELLED -->
+<div class="order-box">
+    <div class="title"><span>🔴</span> Cancalled Orders</div>
+
+    @if (!Model.Cancelled.Any())
+    {
+        <p>No calcelled order.</p>
+    }
+    else
+    {
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    
+                    <th>User</th>
+                    <th>Restaurant</th>
+                    <th>Date</th>
+                    
+                    <th>State</th>
+                    <th>Detail</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var o in Model.Cancelled)
+                {
+                    <tr>
+                       
+                        <td>@o.User.FullName</td>
+                        <td>@o.Restaurant.RestaurantName</td>
+                        <td>@o.OrderDate.ToString("dd MMM yyyy HH:mm")</td>
+                        <!--see ye tıkladığında iptal olan sipaişlerin detaylarını gösterir-->
+
+                        <td><span class="badge badge-cancelled">Cancelled</span></td>
+                        <td><a asp-action="OrderDetails" asp-route-id="@o.OrderId" class="btn btn-primary btn-sm">See</a></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
+<style>
+
+	body {
+		background: #f2f3f7;
+		font-family: 'Segoe UI', sans-serif;
+	}
+
+	h2 {
+		font-weight: 700;
+		color: #34495e;
+		margin-bottom: 25px;
+	}
+
+	/* ORDER BOX */
+	.order-box {
+		background: white;
+		padding: 25px;
+		border-radius: 18px;
+		margin-bottom: 35px;
+		box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+		border: 1px solid rgba(0,0,0,0.05);
+		transition: 0.3s;
+	}
+
+		.order-box:hover {
+			transform: translateY(-3px);
+			box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+		}
+
+	/* SECTION TITLE */
+	.title {
+		font-size: 24px;
+		font-weight: 700;
+		margin-bottom: 18px;
+		display: flex;
+		align-items: center;
+		color: #2c3e50;
+	}
+
+		.title span {
+			font-size: 32px;
+			margin-right: 12px;
+			filter: drop-shadow(0 3px 4px rgba(0,0,0,0.15));
+		}
+
+	/* TABLE */
+	table {
+		border-radius: 10px;
+		overflow: hidden;
+		font-size: 15px;
+	}
+
+	thead tr {
+		background: linear-gradient(90deg, #6a89cc, #4a69bd);
+		color: white;
+		font-size: 15px;
+	}
+
+	tbody tr {
+		transition: 0.25s;
+	}
+
+		tbody tr:hover {
+			background: rgba(0, 0, 0, 0.04);
+			transform: scale(1.01);
+		}
+
+	td, th {
+		vertical-align: middle;
+		padding: 12px 10px !important;
+	}
+
+	/* BADGES */
+	.badge {
+		padding: 6px 12px;
+		border-radius: 6px;
+		color: white;
+		font-weight: 600;
+		font-size: 13px;
+	}
+
+	.badge-preparing {
+		background: linear-gradient(135deg, #f1c40f, #f39c12);
+	}
+
+	.badge-ontheway {
+		background: linear-gradient(135deg, #3498db, #2980b9);
+	}
+
+	.badge-delivered {
+		background: linear-gradient(135deg, #2ecc71, #27ae60);
+	}
+
+	.badge-cancelled {
+		background: linear-gradient(135deg, #e74c3c, #c0392b);
+	}
+
+	/* BUTTON */
+	.btn-primary {
+		background: #6c5ce7;
+		border: none;
+		padding: 5px 14px;
+		font-weight: 600;
+		transition: 0.3s;
+	}
+
+		.btn-primary:hover {
+			background: #4d46c3;
+			transform: scale(1.05);
+		}
+
+</style>

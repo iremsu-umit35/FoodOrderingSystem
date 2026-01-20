@@ -1,0 +1,126 @@
+﻿@model List<FoodOrderingSystem.Models.Entities.Order>
+@{
+    Layout = "~/Views/Shared/_LayoutUser.cshtml";
+    ViewData["Title"] = "Siparişlerim";
+}
+
+<style>
+    .order-card {
+        background: #fff;
+        border-radius: 10px;
+        padding: 15px;
+        margin-bottom: 15px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+        border-left: 4px solid #ff4757;
+    }
+
+    .order-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 5px;
+    }
+
+    .order-restaurant {
+        font-weight: 600;
+        font-size: 16px;
+    }
+
+    .badge-status {
+        padding: 5px 10px;
+        border-radius: 8px;
+        font-size: 12px;
+        font-weight: 600;
+        color: #fff;
+    }
+
+    .st-preparing {
+        background: #f39c12;
+    }
+
+    .st-onway {
+        background: #3498db;
+    }
+
+    .st-delivered {
+        background: #2ecc71;
+    }
+
+    .st-cancelled {
+        background: #e74c3c;
+    }
+
+    .btn-back {
+        display: inline-block;
+        padding: 10px 16px;
+        background: #3498db;
+        color: white;
+        text-decoration: none;
+        border-radius: 6px;
+        font-size: 14px;
+        margin-bottom: 15px;
+        transition: 0.2s;
+    }
+
+        .btn-back:hover {
+            background: #217dbb;
+        }
+</style>
+<!-- bu sayfa nabardaki siparişlerim kısmına tıklayınca gidilen sayfadır-->
+<div class="container mt-4">
+    <h2 class="mb-4">📦 My Order</h2>
+    <a href="/User/Home" class="btn-back">← Home</a>
+
+
+    @if (Model.Count == 0)
+    {
+        <div class="alert alert-info">
+            You don't have any orders yet.
+        </div>
+    }
+    else
+    {
+        foreach (var o in Model)
+        {
+            string css = o.OrderStatusId switch
+            {
+                1 => "badge-status st-preparing",
+                2 => "badge-status st-onway",
+                3 => "badge-status st-delivered",
+                4 => "badge-status st-cancelled",
+                _ => "badge-status"
+            };
+
+            <div class="order-card">
+                <div class="order-header">
+                    <div>
+                        <div class="order-restaurant">@o.Restaurant.RestaurantName</div>
+                        <small>Order #@o.OrderId - @o.OrderDate.ToString("dd MMM yyyy HH:mm")</small>
+                    </div>
+                    <span class="@css">@o.OrderStatus.StatusName</span>
+                </div>
+
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <strong>Total:</strong> @o.TotalAmount ₺
+                    </div>
+                    <div>
+                        <a class="btn btn-outline-danger btn-sm"
+                           href="/Order/Tracking?orderId=@o.OrderId">
+                            🚚 See Tracking
+                        </a>
+
+                        @* ⭐ SADECE DELIVERED İSE YORUM YAP *@
+                        @if (o.OrderStatusId == 3)
+                        {
+                            <a class="btn btn-outline-primary btn-sm"
+                               href="/User/Details/@o.RestaurantId#review">
+                                ✍️ Do Review
+                            </a>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    }
+</div>

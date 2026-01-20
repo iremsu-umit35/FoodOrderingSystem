@@ -1,0 +1,55 @@
+﻿@model FoodOrderingSystem.Models.Entities.User
+@{
+    ViewData["Title"] = "Kayıt Ol";
+}
+<!-- kullancı kayıt viewi-->
+
+<div class="form-container"> 
+    <h2>Sign Up</h2>
+
+    @if (TempData["Message"] != null)
+    {
+        <div class="alert">@TempData["Message"]</div>
+    }
+
+    <!-- form post ile kullanıcıdan aldığımız verileri  account controller deki register metoduna ilettik-->
+    <form asp-controller="Account" asp-action="Register" method="post" id="registerForm">
+
+        <div>
+            <label>Name</label>
+            <input asp-for="FullName" required autocomplete="name" />
+        </div>
+
+        <div>
+            <label>Email</label>
+            <input asp-for="Email" type="email" required autocomplete="email" />
+        </div>
+
+        <div>
+            <label>Password</label>
+            <input asp-for="Password" type="password" required autocomplete="new-password" />
+        </div>
+
+        <div>
+            <label>Phone</label>
+            <input asp-for="Phone" required autocomplete="tel" />
+        </div>
+
+        <div>
+            <label>Address</label>
+            <input asp-for="Address" required autocomplete="street-address" />
+        </div>
+
+        <div>
+            <label>Account Type</label>
+            <select asp-for="Role" required>
+                <option value="">Select</option>
+                <option value="Customer">Customer</option>
+                <option value="RestaurantOwner">Restaurant Owner</option>
+            </select>
+        </div>
+
+        <button type="submit">Sign Up</button>
+
+    </form>
+</div>

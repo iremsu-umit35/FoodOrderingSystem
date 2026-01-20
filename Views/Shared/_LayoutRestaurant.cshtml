@@ -1,0 +1,151 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@ViewData["Title"] - Restaurant Panel</title>
+
+    <style>
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f5f6fa;
+        }
+
+        .panel-wrapper {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* ==== SOL MENÜ ==== */
+        .sidebar {
+            width: 230px;
+            background: #343a40;
+            color: #fff;
+            flex-shrink: 0;
+        }
+
+            .sidebar .brand {
+                padding: 18px 20px;
+                background: #ff4757;
+                font-size: 20px;
+                font-weight: bold;
+                text-align: center;
+            }
+
+            .sidebar a {
+                display: block;
+                padding: 14px 22px;
+                color: #f1f1f1;
+                text-decoration: none;
+                border-bottom: 1px solid #3f474e;
+                font-size: 15px;
+            }
+
+                .sidebar a:hover,
+                .sidebar a.active {
+                    background: #495057;
+                }
+
+
+        /* ==== ANA BÖLÜM ==== */
+        .main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ==== ÜST MENÜ ==== */
+        .topbar {
+            height: 55px;
+            background: white;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+        }
+
+            .topbar .logout {
+                color: #ff4757;
+                font-weight: bold;
+                text-decoration: none;
+            }
+
+        /* ==== SAYFA İÇERİĞİ ==== */
+        .content {
+            padding: 25px;
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <div class="panel-wrapper">
+
+        <!-- SOL MENÜ -->
+        <aside class="sidebar">
+            <div class="brand">🍽 Restaurant Panel</div>
+
+            <a asp-controller="RestaurantOwner" asp-action="Dashboard"
+               class="@(ViewContext.RouteData.Values["action"]?.ToString() == "Dashboard" ? "active" : "")">
+                📊 Dashboard
+            </a>
+
+            <a asp-controller="RestaurantOwner" asp-action="Orders"
+               class="@(ViewContext.RouteData.Values["action"]?.ToString() == "Orders" ? "active" : "")">
+                🧾 Orders
+            </a>
+
+            <a asp-controller="RestaurantOwner" asp-action="Foods"
+               class="@(ViewContext.RouteData.Values["action"]?.ToString() == "Foods" ? "active" : "")">
+                🍽 Foods
+            </a>
+
+            <a asp-controller="RestaurantOwner" asp-action="Reviews"
+               class="@(ViewContext.RouteData.Values["action"]?.ToString() == "Reviews" ? "active" : "")">
+                💬 Reviews
+            </a>
+
+            <a asp-controller="RestaurantOwner" asp-action="Settings"
+               class="@(ViewContext.RouteData.Values["action"]?.ToString() == "Settings" ? "active" : "")">
+                ⚙ Settings
+            </a>
+        </aside>
+
+        <!-- ANA ALAN -->
+        <div class="main">
+
+            <!-- ÜST BAR -->
+            <div class="topbar">
+                <div><strong>@ViewData["Title"]</strong></div>
+
+                <div>
+                    👤 @Context.Session.GetString("UserFullName")
+                    |
+                    <a asp-controller="RestaurantOwner"
+                       asp-action="Logout"
+                       class="logout">
+                        Log Out
+                    </a>
+                </div>
+            </div>
+
+            <!-- SAYFA İÇERİĞİ -->
+            <div class="content">
+                @RenderBody()
+                @RenderSection("Scripts", required: false)
+
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>

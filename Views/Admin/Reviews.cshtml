@@ -1,0 +1,125 @@
+﻿@model List<FoodOrderingSystem.Models.ViewModels.ReviewAdminViewModel>
+@{
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<style>
+    /* Sayfa başlığı */
+    h2 {
+        font-weight: 700;
+        margin-bottom: 25px;
+        color: #2c3e50;
+    }
+
+    /* Tablo kutusu */
+    .review-table {
+        background: #ffffff;
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0 3px 12px rgba(0, 0, 0, 0.12);
+        margin-top: 20px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 15px;
+    }
+
+    thead {
+        background: #34495e;
+        color: #fff;
+    }
+
+        thead th {
+            padding: 12px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+    tbody tr {
+        background: #f9f9f9;
+        transition: 0.25s;
+    }
+
+        tbody tr:nth-child(even) {
+            background: #f0f4f7;
+        }
+
+        tbody tr:hover {
+            background: #e8f4fc;
+            transform: scale(1.01);
+        }
+
+    td {
+        padding: 12px;
+        text-align: center;
+        vertical-align: middle;
+        color: #2c3e50;
+    }
+
+    /* Yıldız kısmı */
+    .star {
+        color: #f1c40f;
+        font-size: 17px;
+        margin-right: 3px;
+    }
+
+    /* Sil butonu */
+    .btn-delete {
+        background: #e74c3c;
+        border: none;
+        padding: 6px 12px;
+        border-radius: 6px;
+        color: #fff;
+        cursor: pointer;
+        font-size: 13px;
+        transition: 0.2s;
+    }
+
+        .btn-delete:hover {
+            background: #c0392b;
+        }
+</style>
+
+<!--adimn tarafındaki yorumları yönetme sayfası-->
+<h2>Review List</h2>
+
+<div class="review-table">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Restaurant</th>
+                <th>User</th>
+                <th>Score</th>
+                <th>Review</th>
+                <th>Date</th>
+                <th>Operation</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <!-- yapılan yorumları görme yeri ve yorumları silme yeri dir-->
+            @foreach (var r in Model)
+            {
+                <tr>
+                    <td>@r.RestaurantName</td>
+                    <td>@(r.UserName ?? "Anonim User")</td> 
+                    <td>
+                        <span class="star">⭐</span> @r.Rating
+                    </td>
+                    <td>@r.Comment</td>
+                    <td>@r.CreatedAt.ToString("dd MMM yyyy")</td>
+
+                    <td>
+                        <form asp-action="DeleteReview" method="post">
+                            <input type="hidden" name="id" value="@r.ReviewId" />
+                            <button class="btn-delete">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

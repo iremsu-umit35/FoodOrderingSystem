@@ -1,0 +1,93 @@
+﻿@using FoodOrderingSystem.Models.Entities
+@model Restaurant
+
+<style>
+
+    /* BAŞLIK */
+    h2 {
+        margin-bottom: 20px;
+        color: #343a40;
+    }
+
+    /* FORM CARD */
+    .form-card {
+        background: white;
+        padding: 25px;
+        border-radius: 8px;
+        max-width: 700px;
+        box-shadow: 0 3px 8px rgba(0,0,0,0.12);
+    }
+
+        /* LABEL */
+        .form-card label {
+            font-weight: 600;
+            color: #444;
+        }
+
+    /* INPUT */
+    .form-control {
+        width: 100%;
+        padding: 10px 12px;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+        margin-top: 5px;
+        font-size: 15px;
+        transition: border .2s;
+    }
+
+        .form-control:focus {
+            border-color: #ff4757;
+            outline: none;
+        }
+
+    /* BUTTON */
+    .btn-save {
+        background: #ff4757;
+        color: white;
+        padding: 10px 22px;
+        border-radius: 6px;
+        border: none;
+        cursor: pointer;
+        font-size: 15px;
+        font-weight: bold;
+        margin-top: 10px;
+        transition: background .2s;
+    }
+
+        .btn-save:hover {
+            background: #e84118;
+        }
+
+</style>
+
+<!-- RESOTANT YOKSA RESTORANT OLUŞUTMA VİEWİ -->
+<h2>🏪 Create Your Restaurant</h2>
+
+<div class="form-card">
+
+    <form method="post">
+
+        <!-- NAME -->
+        <div class="mb-3">
+            <label>Restaurant Name</label>
+            <input asp-for="RestaurantName" class="form-control" />
+        </div>
+
+        <!-- ADDRESS -->
+        <div class="mb-3">
+            <label>Address</label>
+            <input asp-for="Address" class="form-control" />
+        </div>
+
+        <!-- PHONE -->
+        <div class="mb-3">
+            <label>Phone</label>
+            <input asp-for="Phone" class="form-control" />
+        </div>
+
+        <!-- SUBMIT -->
+        <button class="btn-save">Create</button>
+
+    </form>
+
+</div>

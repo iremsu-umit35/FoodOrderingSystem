@@ -1,0 +1,145 @@
+﻿@using FoodOrderingSystem.Models.Entities
+@model List<Food>
+@{
+    Layout = "~/Views/Shared/_LayoutRestaurant.cshtml";
+}
+
+<style>
+
+    /* BAŞLIK */
+    h2 {
+        margin-bottom: 20px;
+        color: #343a40;
+    }
+
+    /* EKLE BUTONU */
+    .btn-add {
+        background: #ff4757;
+        color: white;
+        padding: 10px 18px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-weight: bold;
+        display: inline-block;
+        margin-bottom: 20px;
+        transition: background .2s;
+    }
+
+        .btn-add:hover {
+            background: #e84118;
+        }
+
+    /* TABLO GENEL */
+    .food-table {
+        width: 100%;
+        border-collapse: collapse;
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 3px 8px rgba(0,0,0,0.12);
+    }
+
+        .food-table thead {
+            background: #343a40;
+            color: white;
+        }
+
+        .food-table th {
+            padding: 12px;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        .food-table td {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+            font-size: 14px;
+        }
+
+        .food-table tr:hover {
+            background: #f5f6fa;
+        }
+
+    /* BUTONLAR */
+    .btn-edit {
+        background: #f1c40f;
+        color: white;
+        padding: 6px 12px;
+        border-radius: 5px;
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: bold;
+        transition: background .2s;
+    }
+
+        .btn-edit:hover {
+            background: #d4ac0d;
+        }
+
+    .btn-delete {
+        background: #e74c3c;
+        color: white;
+        padding: 6px 12px;
+        border-radius: 5px;
+        border: none;
+        font-size: 13px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background .2s;
+    }
+
+        .btn-delete:hover {
+            background: #c0392b;
+        }
+
+    /* RESİM */
+    .food-img {
+        border-radius: 6px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+</style>
+
+
+<!--YEMELERİ LİSTELEME VİEW DİR -->
+<h2>🍽 Foods</h2>
+
+<a class="btn-add" asp-action="AddFood">+ Add New Food</a>
+
+<table class="food-table">
+    <thead>
+        <tr>
+            <th style="width: 80px;">Image</th>
+            <th>Name</th>
+            <th style="width: 120px;">Price</th>
+            <th>Description</th>
+            <th style="width: 150px;">Actions</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    <img src="@item.ImageUrl" width="60" class="food-img" />
+                </td>
+                <td>@item.FoodName</td>
+                <td>@item.Price ₺</td>
+                <td>@item.Description</td>
+                <td>
+
+                    <!-- Edit -->
+                    <a asp-action="EditFood" asp-route-id="@item.FoodId" class="btn-edit">Edit</a>
+
+                    <!-- Delete -->
+                    <form asp-action="DeleteFood" method="post" style="display:inline;">
+                        <input type="hidden" name="id" value="@item.FoodId" />
+                        <button class="btn-delete">Delete</button>
+                    </form>
+
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

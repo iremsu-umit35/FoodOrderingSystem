@@ -1,0 +1,318 @@
+﻿@model FoodOrderingSystem.Models.ViewModels.CheckoutViewModel
+
+@{
+    ViewData["Title"] = "Sepeti Onayla";
+    Layout = "~/Views/Shared/_LayoutUser.cshtml";
+}
+<style>
+    .back-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 18px; /* 🔼 büyütüldü */
+        font-weight: 700;
+        color: white;
+        text-decoration: none;
+        padding: 10px 18px;
+        border-radius: 10px;
+        background: #3498db;
+        transition: all 0.25s ease;
+    }
+
+        /* Hover efekti */
+        .back-btn:hover {
+            background: #217dbb;
+            color: #fff;
+            transform: translateX(-4px); /* ← hafif kayma efekti */
+            /*box-shadow: 0 6px 14px rgba(236, 28, 36, 0.35);*/
+        }
+
+        /* Ok biraz daha büyük */
+        .back-btn::before {
+            font-size: 22px;
+            font-weight: 800;
+        }
+
+
+    /* =========================
+       CHECKOUT GENEL
+       ========================= */
+    /* === GRID FIX (Bootstrap bozulduysa kurtarır) === */
+    .checkout-page .row {
+        display: flex !important;
+        gap: 25px;
+    }
+
+    .checkout-page .col-md-7 {
+        width: 65% !important;
+    }
+
+    .checkout-page .col-md-5 {
+        width: 35% !important;
+    }
+
+    .checkout-page {
+        font-family: "Segoe UI", sans-serif;
+        font-size: 15px;
+        color: #2c3e50;
+    }
+
+        /* Container */
+        .checkout-page .container {
+            max-width: 1200px;
+        }
+
+        /* Sayfa başlığı */
+        .checkout-page h2 {
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 25px;
+        }
+
+        /* =========================
+       KARTLAR
+       ========================= */
+        .checkout-page .card {
+            border-radius: 14px;
+            border: 1px solid #e6e9ef;
+            background: #ffffff;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+        }
+
+        .checkout-page .card-header {
+            background: #f8f9fb;
+            font-size: 17px;
+            font-weight: 700;
+            padding: 14px 18px;
+            border-bottom: 1px solid #e6e9ef;
+        }
+
+        .checkout-page .card-body {
+            padding: 20px;
+        }
+
+        /* =========================
+       FORM ALANLARI
+       ========================= */
+        .checkout-page label {
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .checkout-page .form-control,
+        .checkout-page textarea {
+            border-radius: 10px;
+            border: 1px solid #ced4da;
+            padding: 10px 12px;
+            font-size: 14px;
+        }
+
+            .checkout-page .form-control:focus,
+            .checkout-page textarea:focus {
+                border-color: #ff6b6b;
+                box-shadow: 0 0 0 3px rgba(255, 107, 107, .25);
+            }
+
+        /* =========================
+       ÖDEME YÖNTEMİ (RADIO KART)
+       ========================= */
+        .checkout-page .form-check {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: #fafafa;
+            border: 1px solid #ddd;
+            padding: 14px 16px;
+            border-radius: 12px;
+            cursor: pointer;
+            margin-bottom: 12px;
+            transition: 0.25s ease;
+        }
+
+            .checkout-page .form-check:hover {
+                background: #fff3f3;
+            }
+
+        /* Radio gizli */
+        .checkout-page .form-check-input {
+            position: absolute;
+            opacity: 0;
+        }
+
+        /* Seçili kart */
+        .checkout-page .form-check.checked {
+            background: #ffe6e6;
+            border-color: #ff4757;
+        }
+
+        /* Seçili yazı */
+        .checkout-page .form-check-input:checked + label {
+            font-weight: 700;
+            color: #ff4757;
+        }
+
+        /* =========================
+       ONAY BUTONU
+       ========================= */
+        .checkout-page .btn-danger {
+            background: linear-gradient(135deg, #ff4757, #ff6b6b);
+            font-size: 18px;
+            font-weight: 700;
+            border-radius: 12px;
+            padding: 15px;
+            width: 100%;
+            border: none;
+            transition: 0.25s ease;
+        }
+
+            .checkout-page .btn-danger:hover {
+                background: linear-gradient(135deg, #e84118, #ff4757);
+            }
+
+        /* =========================
+       SİPARİŞ ÖZETİ
+       ========================= */
+        .checkout-page .summary-card {
+            position: sticky;
+            top: 20px;
+        }
+
+        .checkout-page ul li {
+            padding: 6px 0;
+            font-size: 14px;
+        }
+
+        .checkout-page .fw-bold span {
+            font-size: 16px;
+        }
+
+
+    .btn-back {
+        display: inline-block;
+        padding: 10px 16px;
+        background: #3498db;
+        color: white;
+        text-decoration: none;
+        border-radius: 6px;
+        font-size: 14px;
+        margin-bottom: 15px;
+        transition: 0.2s;
+    }
+
+        .btn-back:hover {
+            background: #217dbb;
+        }
+
+</style>
+<!--KULLANICI SEPETİ ONAYLA BBUTONNA BASINCA GELEN SAYFA BURDA SEPETİ ONAYLAMA KISMI OLUR-->
+
+
+<div class="checkout-page container mt-5">
+   
+    <a asp-controller="User"
+       asp-action="Details"
+       asp-route-id="@Model.RestaurantId"
+       class="back-btn">
+        ← Restaurant
+    </a>
+    <div class="row">
+
+        <div class="col-md-7">
+            <h2>Delivery and Pay</h2>
+
+            <!-- burda kullanıcıdan alınan veriler post ile user controller cheoud methoduna iletildi-->
+            <form  asp-action="Checkout" method="post" class="checkout-form">
+
+                @Html.AntiForgeryToken()  
+
+                <div asp-validation-summary="All" class="text-danger"></div>
+
+                <input type="hidden" asp-for="RestaurantId" />
+                <input type="hidden" asp-for="RestaurantName" />
+
+                <div class="card mb-4">
+                    <div class="card-header">1. Delivery Address</div>
+                    <div class="card-body">
+                        <label asp-for="DeliveryAddress" class="form-label">Your Adsress</label>
+                        <textarea asp-for="DeliveryAddress" class="form-control" rows="3"></textarea>
+                        <span asp-validation-for="DeliveryAddress" class="text-danger"></span>
+                        <small class="text-muted">You can update or change your address..</small>
+                    </div>
+                </div>
+
+                <div class="card mb-4">< 
+                    <div class="card-header">2. Payment Method</div>
+                    <div class="card-body">
+
+                        <div class="form-check">
+                            <input class="form-check-input"
+                                   type="radio"
+                                   name="PaymentMethod"
+                                   id="payment_cash"
+                                   value="Nakit"
+                                   @(Model.PaymentMethod == "Nakit" ? "checked" : "") />
+
+                            <label class="form-check-label" for="payment_cash">
+                                Paying Cash at The Door
+                            </label>
+                        </div>
+
+                        <div class="form-check">
+                            <input class="form-check-input"
+                                   type="radio"
+                                   name="PaymentMethod"
+                                   id="payment_card"
+                                   value="Kredi Kartı"
+                                   @(Model.PaymentMethod == "Kredi Kartı" ? "checked" : "") />
+
+                            <label class="form-check-label" for="payment_card">
+                                Credit/Debit Card (At the Door or Online)
+                            </label>
+                        </div>
+
+                        <span asp-validation-for="PaymentMethod" class="text-danger"></span>
+
+                    </div>
+                </div>
+
+
+                <button type="submit" class="btn btn-danger btn-lg w-100 mt-3">
+                    @Model.CartTotal ₺ Confirm the Order in the Amount
+                </button>
+            </form>
+        </div>
+        <!--sepet özeti ne var ne yok gibi-->
+        <div class="col-md-5">
+            <div class="card summary-card sticky-top">
+                <div class="card-header">Order Summary (@Model.RestaurantName)</div>
+                <div class="card-body">
+                    <ul class="list-unstyled">
+                        @foreach (var item in Model.CartItems)
+                        {
+                            <li class="d-flex justify-content-between">
+                                <span>@item.FoodName (@item.Quantity)</span>
+                                <span>@(item.Price* item.Quantity) ₺</span>
+                            </li>
+                        }
+                    </ul>
+                    <hr />
+                    <div class="d-flex justify-content-between fw-bold">
+                        <span>Total Amount (Including Taxes)</span>
+                        <span>@Model.CartTotal ₺</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    document.querySelectorAll('.form-check-input').forEach(radio => {
+        radio.addEventListener('change', function () {
+            document.querySelectorAll('.form-check').forEach(x => x.classList.remove('checked'));
+            this.closest('.form-check').classList.add('checked');
+        });
+    });
+</script>
+ 

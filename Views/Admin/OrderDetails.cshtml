@@ -1,0 +1,172 @@
+﻿@model FoodOrderingSystem.Models.Entities.Order
+@{
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+<!--adimn orderları ve detalarını görmek için olanbir sayfa-->
+<h2>Order Details (#@Model.OrderId)</h2>
+
+<div class="detail-container">
+
+    <!-- SOL TARAF -->
+    <div class="detail-left">
+
+        <div class="card p-3 mb-3">
+            <p><strong>USER:</strong> @Model.User.FullName</p> 
+            <p><strong>RESTAURANT:</strong> @Model.Restaurant.RestaurantName</p>
+            <p><strong>DATE:</strong> @Model.OrderDate</p>
+            <p><strong>ORDER STATE:</strong> @Model.OrderStatus.StatusName</p>
+            <p><strong>TOTAL AMOUNT:</strong> @Model.TotalAmount ₺</p>
+        </div>
+
+    </div>
+
+    <!-- SAĞ TARAF -->
+    <div class="detail-right">
+
+        <h4>🧾  Order Summary</h4>
+
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Food</th>
+                    <th>Quantity</th>
+                    <th>Unit Price</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.OrderDetails)
+                {
+                    <tr>
+                        <td>@item.Food.FoodName</td>
+                        <td>@item.Quantity</td>
+                        <td>@item.Food.Price ₺</td>
+                        <td>@(item.Food.Price* item.Quantity) ₺</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    </div>
+
+</div>
+
+<!--orders acitonuna geri döner-->
+<a asp-action="Orders" class="btn btn-secondary mt-3">← BACK</a>
+
+
+<style>
+
+
+    /* Ana kapsayıcı: yan yana düzen */
+    .detail-container {
+        display: flex;
+        gap: 25px;
+        margin-top: 20px;
+    }
+
+    /* Sol taraf: sipariş ana bilgileri */
+    .detail-left {
+        flex: 1;
+    }
+
+    /* Sağ taraf: sipariş içeriği */
+    .detail-right {
+        flex: 1;
+    }
+
+   
+
+
+    body {
+        background: #f2f3f7;
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    h2 {
+        font-weight: 700;
+        color: #2c3e50;
+        margin-bottom: 25px;
+    }
+
+    h4 {
+        font-weight: 700;
+        margin-top: 35px;
+        margin-bottom: 15px;
+        color: #2c3e50;
+    }
+
+    /* CARD DESIGN */
+    .card {
+        background: white;
+        padding: 25px !important;
+        border-radius: 18px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+        border: 1px solid rgba(0,0,0,0.05);
+        transition: 0.3s;
+    }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 14px 30px rgba(0,0,0,0.12);
+        }
+
+        .card p {
+            font-size: 16px;
+            margin: 6px 0;
+        }
+
+        .card strong {
+            width: 120px;
+            display: inline-block;
+            color: #34495e;
+        }
+
+    /* TABLE */
+    table {
+        margin-top: 15px;
+        border-radius: 12px;
+        overflow: hidden;
+        background: white;
+        box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+    }
+
+    thead tr {
+        background: linear-gradient(90deg, #4a69bd, #6a89cc);
+        color: white;
+        font-weight: bold;
+        font-size: 16px;
+    }
+
+    tbody tr {
+        transition: 0.25s;
+        font-size: 15px;
+    }
+
+        tbody tr:hover {
+            background: rgba(0,0,0,0.05);
+            transform: scale(1.01);
+        }
+
+    td, th {
+        vertical-align: middle;
+        padding: 12px 15px !important;
+    }
+
+    /* BACK BUTTON */
+    .btn-secondary {
+        background: #7f8c8d;
+        border: none;
+        padding: 8px 18px;
+        border-radius: 8px;
+        color: white;
+        font-weight: 600;
+        transition: 0.3s;
+    }
+
+        .btn-secondary:hover {
+            background: #636e72;
+            transform: translateX(-4px);
+        }
+
+</style>

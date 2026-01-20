@@ -1,0 +1,121 @@
+﻿@using FoodOrderingSystem.Models.DTOs
+@model List<ReviewDTO>
+@{
+    Layout = "~/Views/Shared/_LayoutRestaurant.cshtml";
+}
+
+<style>
+    /* ⭐ Review Kartı ⭐ */
+    .review-card {
+        background: #fff;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        padding: 15px;
+        margin-bottom: 20px;
+    }
+
+        /* Kullanıcı adı */
+        .review-card strong {
+            font-size: 17px;
+            color: #333;
+        }
+
+        /* ⭐ yıldız gösterimi */
+        .review-card .stars {
+            color: #f1c40f;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+
+        /* Yorum */
+        .review-card p {
+            margin-top: 8px;
+            font-size: 15px;
+            color: #444;
+        }
+
+        /* Tarih */
+        .review-card small {
+            color: #888;
+            font-size: 13px;
+        }
+
+    /* ⭐ Owner Reply Kutusu ⭐ */
+    .owner-reply-box {
+        background: #e8f0ff;
+        border-left: 4px solid #3b7ddd;
+        padding: 10px;
+        margin-top: 12px;
+        border-radius: 6px;
+    }
+
+    /* Reply butonu */
+    .btn-reply {
+        background-color: #3b7ddd;
+        color: white;
+        border-radius: 6px;
+        font-size: 13px;
+        padding: 4px 10px;
+        border: none;
+        margin-bottom: 8px;
+    }
+
+        .btn-reply:hover {
+            background-color: #2f66c7;
+        }
+</style>
+
+<!--YOTRUMLARI LİSTELEME VE CEVAPLAMA VİEWİ DİR-->
+<h2 class="mb-4">📢 Customer Reviews</h2>
+
+@foreach (var r in Model)
+{
+    <div class="review-card">
+
+        <!-- Kullanıcı bilgisi -->
+        <div class="d-flex justify-content-between">
+            <strong>@r.UserFullName</strong>
+            <span class="stars">⭐ @r.Rating</span>
+        </div>
+
+        <!-- Yorum -->
+        <p>@r.Comment</p>
+
+        <!-- Tarih -->
+        <small>@r.CreatedAt.ToString("dd MMM yyyy HH:mm")</small>
+
+        <hr />
+
+        <!-- Eğer cevap yoksa reply formu -->
+        @if (string.IsNullOrEmpty(r.ReplyText))
+        {
+            <button class="btn-reply"
+                    onclick="showReplyBox(@r.ReviewId)">
+                Reply
+            </button>
+
+            <div id="replyBox-@r.ReviewId" style="display:none" class="mt-2">
+                <form asp-action="AddReply" method="post">
+                    <input type="hidden" name="ReviewId" value="@r.ReviewId" />
+                    <textarea name="ReplyText" class="form-control mb-2" placeholder="Write your reply..."></textarea>
+                    <button class="btn btn-success btn-sm">Send Reply</button>
+                </form>
+            </div>
+        }
+        else
+        {
+            <!-- Eğer cevap varsa -->
+            <div class="owner-reply-box">
+                <strong>Your Reply:</strong>
+                <p>@r.ReplyText</p>
+                <small>@r.RepliedAt?.ToString("dd MMM yyyy HH:mm")</small>
+            </div>
+        }
+    </div>
+}
+
+<script>
+    function showReplyBox(id) {
+        document.getElementById("replyBox-" + id).style.display = "block";
+    }
+</script>

@@ -1,0 +1,160 @@
+﻿@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewData["Title"] - Admin Panel</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .admin-wrapper {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* SOL MENÜ */
+        .admin-sidebar {
+            width: 230px;
+            background: #343a40;
+            color: white;
+        }
+
+            .admin-sidebar .brand {
+                padding: 18px 20px;
+                background: #ff4757;
+                font-size: 20px;
+                font-weight: bold;
+            }
+
+            .admin-sidebar ul {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+            }
+
+            .admin-sidebar li a {
+                display: block;
+                padding: 12px 20px;
+                color: #f8f9fa;
+                text-decoration: none;
+                font-size: 15px;
+                border-bottom: 1px solid #3f474e;
+            }
+
+                .admin-sidebar li a:hover,
+                .admin-sidebar li a.active {
+                    background: #495057;
+                }
+
+        /* SAĞ KISIM */
+        .admin-main {
+            flex: 1;
+            background: #f5f6fa;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ÜST MENÜ */
+        .admin-topbar {
+            height: 55px;
+            background: #fff;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+        }
+
+            .admin-topbar a {
+                color: red;
+                text-decoration: none;
+                font-weight: bold;
+            }
+
+        /* SAYFA İÇERİĞİ */
+        .admin-content {
+            padding: 25px;
+        }
+
+        /* BASİT KART TASARIMI */
+        .card {
+            background: white;
+            padding: 15px 20px;
+            border-radius: 7px;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .row {
+            display: flex;
+            gap: 20px;
+        }
+
+        .col {
+            flex: 1;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="admin-wrapper">
+
+        <!-- SOL MENÜ -->
+        <aside class="admin-sidebar">
+            <div class="brand">TurnaFood Admin</div>
+
+            <ul>
+                <li>
+                    <a asp-controller="Admin" asp-action="Home"
+                       class="@(ViewContext.RouteData.Values["action"]?.ToString() == "Home" ? "active" : "")">
+                        Dashboard
+                    </a>
+                </li>
+
+                <li>
+                    <a asp-controller="Admin" asp-action="RestaurantOwners"
+                       class="@(ViewContext.RouteData.Values["action"]?.ToString() == "RestaurantOwners" ? "active" : "")">
+                        Waiting restaurants
+                    </a>
+                </li>
+
+                <li><a asp-controller="Admin" asp-action="Users">Users</a></li>
+                <li><a asp-controller="Admin" asp-action="Restaurants">Restaurants</a></li>
+                <li><a asp-controller="Admin" asp-action="Reviews">Reviews</a></li>
+                <li><a asp-controller="Admin" asp-action="Orders">Orders</a></li>
+            </ul>
+        </aside>
+
+        <!-- ANA İÇERİK -->
+        <div class="admin-main">
+
+            <!-- ÜST MENÜ -->
+            <div class="admin-topbar">
+                <div>
+                    <strong>@ViewData["Title"]</strong>
+                </div>
+
+                <div>
+                    @HttpContextAccessor.HttpContext.Session.GetString("UserFullName")
+                    |
+                    <a href="/Account/Logout">Log Out</a>
+                </div>
+            </div>
+
+            <!-- SAYFA İÇERİĞİ -->
+            <main class="admin-content">
+                @RenderBody()
+            </main>
+        </div>
+    </div>
+
+</body>
+</html>

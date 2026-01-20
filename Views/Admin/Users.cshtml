@@ -1,0 +1,94 @@
+﻿@model List<FoodOrderingSystem.Models.Entities.User>
+
+@{
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    ViewData["Title"] = "Kullanıcılar";
+}
+
+<style>
+
+    .page-title {
+        font-size: 28px;
+        font-weight: 600;
+        margin-bottom: 20px;
+        color: #2c3e50;
+    }
+
+    .user-table {
+        width: 100%;
+        background: white;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    }
+
+        .user-table th {
+            background: #f8f9fa;
+            padding: 14px;
+            font-weight: bold;
+            color: #34495e;
+        }
+
+        .user-table td {
+            padding: 14px;
+            color: #2c3e50;
+        }
+
+        .user-table tr:nth-child(even) {
+            background: #fafafa;
+        }
+
+        .user-table tr:hover {
+            background: #eef4ff;
+            transition: 0.2s;
+        }
+
+    .btn-detail {
+        background: #3498db;
+        padding: 6px 14px;
+        color: white;
+        border-radius: 6px;
+        text-decoration: none;
+        font-size: 13px;
+        transition: 0.2s;
+    }
+
+        .btn-detail:hover {
+            background: #217dbb;
+            color: white;
+        }
+
+</style>
+<!--kullanıcı adlarını gösterme yeridir-->
+<h2 class="page-title">User List</h2>
+
+<table class="user-table">
+    <thead>
+        <tr>
+            <th>Name Surname</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Operation</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var u in Model)
+        {
+            <tr>
+                <td>@u.FullName</td>
+                <td>@u.Email</td>
+                <td>@u.Role</td>
+
+                <td>
+                    <!--userdetail action a gider-->
+                    <a asp-action="UserDetails"
+                       asp-route-id="@u.UserId"
+                       class="btn-detail">
+                        Detail →
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

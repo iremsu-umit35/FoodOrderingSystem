@@ -1,0 +1,127 @@
+﻿@model FoodOrderingSystem.Models.ViewModels.OwnerDashboardViewModel
+@{
+    Layout = "~/Views/Shared/_LayoutRestaurant.cshtml";
+}
+
+<style>
+
+    /* KARTLAR */
+    .stat-card {
+        background: white;
+        padding: 20px;
+        text-align: center;
+        border-radius: 8px;
+        box-shadow: 0 3px 6px rgba(0,0,0,0.10);
+        transition: transform .2s;
+    }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .stat-card h6 {
+            color: #666;
+            margin-bottom: 8px;
+            font-size: 15px;
+        }
+
+        .stat-card h3 {
+            font-size: 28px;
+            margin: 0;
+            color: #343a40;
+            font-weight: bold;
+        }
+
+    /* TABLO */
+    .custom-table {
+        width: 100%;
+        margin-top: 20px;
+        border-collapse: collapse;
+        background: white;
+        border-radius: 7px;
+        overflow: hidden;
+        box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+    }
+
+        .custom-table th {
+            background: #343a40;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        .custom-table td {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+            font-size: 14px;
+        }
+
+        .custom-table tr:hover {
+            background: #f5f6fa;
+        }
+
+</style>
+
+
+<h2 class="mb-4">📊 Dashboard</h2>
+
+<div class="row" style="display:flex; gap:20px; flex-wrap:wrap;">
+
+    <div class="col" style="flex:1; min-width:220px;">
+        <div class="stat-card">
+            <h6>Today's Orders</h6>
+            <h3>@Model.TodayOrders</h3>
+        </div>
+    </div>
+
+    <div class="col" style="flex:1; min-width:220px;">
+        <div class="stat-card">
+            <h6>Today's Revenue</h6>
+            <h3>@Model.TodayRevenue ₺</h3>
+        </div>
+    </div>
+
+    <div class="col" style="flex:1; min-width:220px;">
+        <div class="stat-card">
+            <h6>Total Orders</h6>
+            <h3>@Model.TotalOrders</h3>
+        </div>
+    </div>
+
+    <div class="col" style="flex:1; min-width:220px;">
+        <div class="stat-card">
+            <h6>Average Rating</h6>
+            <h3>⭐ @Model.AverageRating</h3>
+        </div>
+    </div>
+
+</div>
+
+
+<h4 class="mt-4" style="margin-top:35px;">📦 Recent Orders</h4>
+
+<table class="custom-table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Customer</th>
+            <th>Date</th>
+            <th>Total</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var o in Model.LatestOrders)
+        {
+            <tr>
+                <td>@o.OrderId</td>
+                <td>@o.User.FullName</td>
+                <td>@o.OrderDate.ToString("dd MMM yyyy HH:mm")</td>
+                <td>@o.TotalAmount ₺</td>
+                <td>@o.OrderStatus.StatusName</td>
+            </tr>
+        }
+    </tbody>
+</table>

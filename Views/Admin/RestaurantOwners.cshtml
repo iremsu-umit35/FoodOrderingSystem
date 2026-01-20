@@ -1,0 +1,117 @@
+﻿@model List<FoodOrderingSystem.Models.Entities.User>
+@{
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<style>
+    .page-title {
+        font-size: 26px;
+        font-weight: bold;
+        margin-bottom: 25px;
+    }
+
+    .owner-table-container {
+        background: white;
+        padding: 25px;
+        border-radius: 10px;
+        box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+        width: 90%;
+        margin: auto;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+    }
+
+        table thead {
+            background: #ff4757;
+            color: white;
+        }
+
+        table th, table td {
+            padding: 12px 15px;
+            font-size: 15px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+
+        table tr:hover {
+            background: #f2f2f2;
+        }
+
+    .approve-btn {
+        background: #28a745;
+        color: white;
+        padding: 6px 14px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: 0.2s;
+    }
+
+        .approve-btn:hover {
+            background: #1f8b3b;
+        }
+
+    .no-data {
+        font-size: 18px;
+        padding: 20px;
+        text-align: center;
+        color: #666;
+    }
+</style>
+
+<!--onay bekleyen restorant sahipleri sayfası burda confirm yaparız-->
+<div class="page-title">Restaurant Owners Awaiting Approval</div>
+
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-success" style="width: 90%; margin:auto; margin-bottom: 15px;">
+        @TempData["Message"]
+    </div>
+}
+
+<div class="owner-table-container">
+
+    @if (Model.Count == 0)
+    {
+        <div class="no-data">There are currently no restaurant owners awating approvial.</div>
+    }
+    else
+    {
+        <table>
+            <thead>
+                <tr>
+                    <th>Name Surname</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Address</th>
+                    <th style="width: 120px;">Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var u in Model)
+                {
+                    <tr>
+                        <td>@u.FullName</td>
+                        <td>@u.Email</td>
+                        <td>@u.Phone</td>
+                        <td>@u.Address</td>
+						<td>
+							<!-- burda confirm butonuna basınca admin controller
+							approveowner çalışır ve prosedur çalışır-->
+                            <form asp-action="ApproveOwner" asp-controller="Admin" method="post"> 
+                                <input type="hidden" name="id" value="@u.UserId" />
+                                <button type="submit" class="approve-btn">Confirm</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>

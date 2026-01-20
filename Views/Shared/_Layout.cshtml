@@ -1,0 +1,27 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewData["Title"] - FoodOrderingSystem</title>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" /> <!-- css için-->
+</head>
+<body>
+
+    <!-- ÜST NAVBAR -->
+    <nav>
+        <a href="/Home/Index" class="logo">TurnaFood</a> <!-- css için-->
+        <div class="menu">
+            <div class="lang-selector">TR ⌄</div>
+            <a href="/Cart/Index" class="cart-icon">🛒</a>
+            <a href="/Account/Login">Sign In</a>
+            <a href="/Account/Register" class="register-btn">Sign up for free delivery</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        @RenderBody()
+    </div>
+
+    <script src="~/js/site.js" asp-append-version="true"></script><!-- js için-->
+</body>
+</html>

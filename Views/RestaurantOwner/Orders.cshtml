@@ -1,0 +1,183 @@
+﻿@model List<FoodOrderingSystem.Models.Entities.Order>
+@{
+    Layout = "~/Views/Shared/_LayoutRestaurant.cshtml";
+}
+
+<h2 class="mb-4">📦 Order Management</h2>
+
+<style>
+    .order-card {
+        background: #fff;
+        border-radius: 10px;
+        padding: 18px;
+        margin-bottom: 18px;
+        box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+        border-left: 5px solid #3b7ddd;
+    }
+
+    .order-header {
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 6px;
+    }
+
+    .order-detail small {
+        font-size: 13px;
+        color: #777;
+    }
+
+    .badge-status {
+        padding: 6px 12px;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 600;
+        color: #fff;
+    }
+
+    .st-preparing {
+        background-color: #f39c12;
+    }
+
+    .st-onway {
+        background-color: #3498db;
+    }
+
+    .st-delivered {
+        background-color: #2ecc71;
+    }
+
+    .st-cancelled {
+        background-color: #e74c3c;
+    }
+
+    .btn-status {
+        margin-right: 8px;
+        padding: 5px 12px;
+        border-radius: 6px;
+        font-size: 13px;
+    }
+</style>
+
+<!--SİPARİŞLER SAYFASI BURDA VAR OLAN SİAPARİŞLERİ GÖRÜYORUZ SİPARİŞ DURUMLARINI GÜNCELLEME KIMI BURASIs-->
+@foreach (var o in Model)
+{
+    <div class="order-card">
+
+        <div class="order-header">
+            🧾 Order #@o.OrderId
+        </div>
+
+        <div class="order-detail mb-2">
+            <strong>Custemer:</strong> @o.User.FullName <br />
+            <strong>Date:</strong> @o.OrderDate.ToString("dd MMM yyyy HH:mm") <br />
+            <strong>TotalAmount:</strong> @o.TotalAmount ₺ <br />
+
+            <strong>Status:</strong>
+            @{
+                string css = "";
+
+                switch (o.OrderStatusId)
+                {
+                    case 1: css = "badge-status st-preparing"; break;
+                    case 2: css = "badge-status st-onway"; break;
+                    case 3: css = "badge-status st-delivered"; break;
+                    case 4: css = "badge-status st-cancelled"; break;
+                }
+            }
+
+            <span class="@css">@o.OrderStatus.StatusName</span>
+        </div>
+
+        <hr />
+
+        <!-- ACTION BUTTONS -->
+        <div class="mt-2">
+
+            @if (o.OrderStatusId == 1)
+            {
+                <!-- Preparing → On The Way -->
+                <button class="btn btn-primary btn-status"
+                        onclick="updateStatus(@o.OrderId, 2)">
+                    🚚 On The Way
+                </button>
+            }
+            else if (o.OrderStatusId == 2)
+            {
+                <!-- On The Way → Delivered -->
+                <button class="btn btn-success btn-status"
+                        onclick="updateStatus(@o.OrderId, 3)">
+                    ✔ Delevered
+                </button>
+            }
+
+            @if (o.OrderStatusId != 4 && o.OrderStatusId != 3)
+            {
+                <!-- Cancel -->
+                <button class="btn btn-danger btn-status"
+                        onclick="updateStatus(@o.OrderId, 4)">
+                    ❌ Cancelled
+                </button>
+            }
+
+            <!-- Sipariş Detayı -->
+            <a href="/RestaurantOwner/OrderDetail/@o.OrderId"
+               class="btn btn-secondary btn-status">
+                📄 Detail
+            </a>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    <script>
+        function updateStatus(orderId, newStatusId) {
+
+            console.log("Gönderilen ID:", orderId, "Yeni Durum:", newStatusId);
+
+            if (!confirm("Sipariş durumunu güncellemek istiyor musunuz?"))
+                return;
+
+            fetch('/RestaurantOwner/UpdateOrderStatus', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    orderId: orderId,
+                    newStatusId: newStatusId
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                console.log("Sunucu yanıtı:", data);
+
+                if (data.success) {
+                    location.reload(); // ✅ Sessiz güncelleme
+                } else {
+                    console.error("Hata:", data.message);
+                }
+            })
+            .catch(err => {
+                console.error("Fetch Hatası:", err);
+            });
+        }
+    </script>
+}
+
+
+<!--Restoran sahibinin tüm siparişlerini listeler
+✔ Her sipariş için:
+
+Sipariş No
+
+Kullanıcı adı
+
+Tarih
+
+Toplam tutar
+
+Durum etiketi (renkli)
+
+“Yola Çıkar”, “Teslim Edildi”, “İptal Et” butonları
+
+Sipariş detayına git
+
+✔ AJAX ile anında güncelleme (sayfa donmaz)-->

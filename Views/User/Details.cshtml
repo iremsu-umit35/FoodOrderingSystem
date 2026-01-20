@@ -1,0 +1,323 @@
+﻿@{
+    Layout = "~/Views/Shared/_LayoutUser.cshtml";
+}
+<!-- KULLANICI RESTORANT ANA SAYFASI BURDA YEMEKLER SEPET VE YORUMLAR GÖZÜKÜR -->
+@model FoodOrderingSystem.Models.ViewModels.RestaurantDetailsViewModel
+<link rel="stylesheet" href="/css/user-foods.css" />
+
+<a href="/User/List" class="btn-back">← Restaurants</a>
+
+<div class="restaurant-header">
+    <h1>@Model.Restaurant.RestaurantName</h1>
+    <p>@Model.Restaurant.Address</p>
+    <p class="rating">⭐ @Model.Restaurant.AverageRating</p>
+</div>
+
+
+<div class="menu-cart-wrapper">
+
+    <!-- SOL TARAF: MENÜ -->
+    <div class="menu-list">
+        <h2>Menü</h2>
+
+        <div class="food-container">
+            @foreach (var food in Model.Foods)
+            {
+                <div class="food-card">
+
+                    <img src="@food.ImageUrl" alt="@food.FoodName" class="food-img" />
+
+                    <h3>@food.FoodName</h3>
+                    <p class="desc">@food.Description</p>
+                    <p class="price">@food.Price ₺</p>
+
+                    <button class="add-btn" onclick="addToCart(@food.FoodId)">
+                        +
+                    </button>
+                </div>
+            }
+        </div>
+
+
+        <!-- ⭐ YORUM EKLEME FORMU ⭐ -->
+        <div id="review"></div>
+        <div class="review-box mt-5">
+            <h2> Make review</h2>
+
+            <label>Puan (1 - 5):</label>
+            <select id="rating" class="form-select" style="max-width:150px;">
+                <option value="1">1 ⭐</option>
+                <option value="2">2 ⭐⭐</option>
+                <option value="3">3 ⭐⭐⭐</option>
+                <option value="4">4 ⭐⭐⭐⭐</option>
+                <option value="5">5 ⭐⭐⭐⭐⭐</option>
+            </select>
+
+            <label class="mt-2">Your review:</label>
+            <textarea id="comment" class="form-control" rows="3" placeholder="Write your review..."></textarea>
+
+            <button class="btn btn-danger mt-2"
+                    onclick="sendReview(@Model.Restaurant.RestaurantId)">
+                Send
+            </button>
+        </div>
+
+
+        <!-- ⭐ YORUMLAR LİSTESİ ⭐ -->
+        <div class="review-list mt-4">
+            <h2>Reviews</h2>
+
+            @if (Model.Reviews == null || Model.Reviews.Count == 0)
+            {
+                <p>There are no reviews for this restaurant yet.</p>
+            }
+            else
+            {
+                foreach (var r in Model.Reviews)
+                {
+                    <div class="review-card">
+
+                        <!-- Kullanıcının Yorumu -->
+                        <strong>@r.UserFullName</strong>
+                        <div class="stars">⭐ @r.Rating / 5</div>
+                        <p>@r.Comment</p>
+                        <small>@r.CreatedAt.ToString("dd MMM yyyy HH:mm")</small>
+
+                        <!-- ⭐⭐⭐ RESTORAN CEVABI BURAYA EKLENDİ ⭐⭐⭐ -->
+                        @if (!string.IsNullOrEmpty(r.ReplyText))
+                        {
+                            <div class="owner-reply mt-2">
+                                <strong>The Restaurant's Response:</strong>
+                                <p>@r.ReplyText</p>
+                                <small>@r.RepliedAt?.ToString("dd MMM yyyy HH:mm")</small>
+                            </div>
+                        }
+                    </div>
+                }
+            }
+        </div>
+
+        <style>
+            .owner-reply {
+                background: #eef5ff;
+                padding: 10px;
+                border-left: 4px solid #3b7ddd;
+                border-radius: 5px;
+                margin-top: 8px;
+            }
+        </style>
+
+
+    </div>
+
+    <!-- SAĞ TARAF: SEPET -->
+    <div class="cart-panel">
+        <h2>My cart</h2>
+
+        @if (Model.CartItems.Count == 0)
+        {
+            <p class="empty-cart">🛒 Your cart looks empty right now.</p>
+        }
+        else
+        {
+            <ul class="cart-list" id="cartList">
+                @foreach (var item in Model.CartItems)
+                {
+                    <li class="cart-item">
+                        <div class="cart-item-details">
+                            <strong>@item.FoodName</strong>
+                            <p>@item.Price ₺ × @item.Quantity</p>
+                        </div>
+                    </li>
+                }
+            </ul>
+
+            <div class="cart-summary">
+                <h3>Toplam: @Model.CartTotal ₺</h3>
+
+                <button class="clear-cart-btn" onclick="clearCart()">Clear The Cart</button>
+
+                <a href="/User/Checkout" class="checkout-btn">Confirm The Cart</a>
+
+            </div>
+        }
+    </div>
+</div>
+
+
+
+<script>
+    function addToCart(foodId) {
+        fetch('/User/AddToCart', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ foodId: foodId })
+        })
+        .then(res => res.json())
+        .then(data => { if (data.success) location.reload(); });
+    }
+
+    function clearCart() {
+        if (!confirm("Sepeti temizlemek istediğinizden emin misiniz?")) return;
+
+        fetch('/User/ClearCart', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' }
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) { alert(data.message); location.reload(); }
+            else { alert("Hata: " + data.message); }
+        });
+    }
+
+
+    // ⭐ AJAX ile RESTORANA YORUM EKLEME ⭐
+    function sendReview(resId) {
+
+        let data = {
+            restaurantId: resId,
+            rating: document.getElementById("rating").value,
+            comment: document.getElementById("comment").value
+        };
+
+        fetch('/User/AddReview', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        })
+            .then(res => res.json())
+            .then(result => {
+                if (result.success) {
+                    
+                    location.reload();
+                } else {
+                    alert(result.message);
+                }
+            });
+    }
+</script>
+
+
+<style>
+
+    /* =========================
+       YORUM YAP FORMU
+       ========================= */
+    .review-box {
+        background: #ffffff;
+        padding: 20px;
+        border-radius: 10px;
+        margin-top: 40px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+        .review-box h2 {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .review-box label {
+            font-weight: 600;
+            display: block;
+            margin-top: 10px;
+        }
+
+        .review-box select,
+        .review-box textarea {
+            width: 100%;
+            margin-top: 5px;
+            padding: 8px 10px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+        }
+
+        .review-box button {
+            margin-top: 12px;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 600;
+        }
+
+    /* =========================
+       YORUMLAR LİSTESİ
+       ========================= */
+    .review-list {
+        margin-top: 35px;
+    }
+
+        .review-list h2 {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+    .review-card {
+        background: #ffffff;
+        padding: 16px;
+        border-radius: 10px;
+        margin-bottom: 15px;
+        box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+    }
+
+        .review-card strong {
+            font-size: 15px;
+            color: #2c3e50;
+        }
+
+        .review-card p {
+            margin: 8px 0;
+            font-size: 14px;
+        }
+
+        .review-card small {
+            font-size: 12px;
+            color: #777;
+        }
+
+    /*  PUAN */
+    .stars {
+        color: #f39c12;
+        font-weight: 700;
+        margin: 4px 0;
+    }
+
+    /* =========================
+       RESTORAN CEVABI
+       ========================= */
+    .owner-reply {
+        background: #f0f6ff;
+        padding: 10px;
+        border-left: 4px solid #3b7ddd;
+        border-radius: 6px;
+        margin-top: 10px;
+    }
+
+        .owner-reply strong {
+            font-size: 14px;
+        }
+
+        .owner-reply p {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+
+
+    .btn-back {
+        display: inline-block;
+        padding: 10px 16px;
+        background: #3498db;
+        color: white;
+        text-decoration: none;
+        border-radius: 6px;
+        font-size: 14px;
+        margin-bottom: 15px;
+        transition: 0.2s;
+    }
+
+        .btn-back:hover {
+            background: #217dbb;
+        }
+</style>

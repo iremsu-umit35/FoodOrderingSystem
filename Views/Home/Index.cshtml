@@ -1,0 +1,87 @@
+﻿@{
+    ViewData["Title"] = "Ana Sayfa";
+    ViewData["ShowBanner"] = true;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@if (ViewData["ShowBanner"] as bool? == true)
+{
+    <div class="ys-hero-banner" style="background-image:url('/images/image.jpg');">
+        <h1>
+            ALL CITIES IN TURKEY WHERE YOU CAN PLACE ONLINE FOOD ORDERS
+        </h1>
+    </div>
+}
+
+<div class="city-container">
+
+    @{
+        List<string> sehirler = new()
+        {
+        "İzmir","İzmir","Erzurum","Erzurum",
+        "Antalya","Artvin","Aydın","Balıkesir",
+        "Bursa","Denizli","Diyarbakır","Erzurum",
+        "Eskişehir","Gaziantep","Hatay","İstanbul",
+        "Adana","Kocaeli","Konya","Mersin"
+        };
+    }
+    <div class="city-grid">
+        @foreach (var sehir in sehirler)
+        {
+            <a asp-controller="User"
+               asp-action="List"
+               asp-route-city="@sehir"
+               class="city-item">
+                @sehir
+            </a>
+        }
+    </div>
+
+</div>
+<style>
+    /* --- ŞEHİR LİSTESİ GENEL YAPISI --- */
+    .city-container {
+        /* Görseldeki gibi daraltılmış orta kısım */
+        width: 85%;
+        max-width: 1200px;
+        margin: 40px auto; /* Üst ve alttan boşluk bırakır, yatayda ortalar */
+        padding: 0 15px;
+    }
+
+    /* --- GRID YAPISI --- */
+    .city-grid {
+        /* Sizin tanımladığınız 4 sütunlu yapı */
+        display: grid;
+        grid-template-columns: repeat(4, 1fr); /* Eşit genişlikte 4 sütun */
+        gap: 20px 50px; /* Dikeyde 20px, yatayda 50px boşluk */
+        text-align: left; /* Metni sola yaslar (Görselinizdeki gibi) */
+    }
+
+    /* --- ŞEHİR LİNK STİLİ (city-item) --- */
+    .city-item {
+        /* Görseldeki gibi morumsu/mavi tonları kullanıyoruz */
+        color: #e0133b; /* Koyu mor renk */
+        font-size: 16px;
+        font-weight: 500;
+        text-decoration: underline; /* Altı çizili link görünümü */
+        /* Flex yapısını kırıp blok olarak görünmesini sağlar */
+        display: inline-block;
+        padding: 5px 0;
+        line-height: 1.8; /* Dikey aralığı artırır */
+
+    }
+
+        .city-item:hover {
+            /* Hover durumunda rengi değiştir */
+            color: #e84118; /* Yemeksepeti kırmızısı */
+            text-decoration: none;
+        }
+
+    /* Başlık stili (Eğer başlık ekleyecekseniz) */
+    .city-container h3 {
+        font-size: 1.8rem;
+        font-weight: 500;
+        color: #444;
+        margin-bottom: 25px;
+    }
+</style>

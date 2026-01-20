@@ -1,0 +1,130 @@
+﻿@model FoodOrderingSystem.Models.ViewModels.AdminRestaurantDetailsViewModel
+@{
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    ViewData["Title"] = "Restoran Yemekleri";
+}
+
+<style>
+    h2 {
+        font-weight: 800;
+        font-size: 32px;
+        margin-bottom: 25px;
+        color: #1e3d59;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+        h2::before {
+            content: "🍽";
+            font-size: 32px;
+        }
+
+    .info-box {
+        background: #ffffffd9;
+        backdrop-filter: blur(8px);
+        padding: 30px;
+        border-radius: 16px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+        border: 1px solid rgba(200,200,200,0.4);
+    }
+
+    .table {
+        font-size: 18px;
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    thead tr {
+        background: linear-gradient(90deg, #6a11cb, #2575fc);
+        color: white;
+        font-size: 18px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    tbody tr {
+        transition: all 0.25s ease;
+    }
+
+        tbody tr:hover {
+            background: rgba(0,0,0,0.06);
+            transform: scale(1.005);
+        }
+
+    td {
+        padding: 14px 18px !important;
+        font-size: 17px;
+        vertical-align: middle;
+        font-weight: 500;
+    }
+
+    .btn-danger {
+        background: #ff4d4d;
+        border: none;
+        padding: 6px 14px;
+        font-size: 15px;
+        font-weight: 600;
+        border-radius: 6px;
+        transition: 0.25s;
+    }
+
+        .btn-danger:hover {
+            background: #d63031;
+            transform: scale(1.1);
+        }
+
+    .btn-back {
+        background: #34495e;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-size: 16px;
+        text-decoration: none;
+        transition: 0.25s;
+        margin-top: 20px;
+        display: inline-block;
+    }
+
+        .btn-back:hover {
+            background: #2c3e50;
+            transform: translateX(-5px);
+        }
+</style>
+
+<!--Admin tarafındaki see food butonuna tıklayınca gelen sayfa-->
+<h2>@Model.Restaurant.RestaurantName - Foods</h2>
+
+<div class="info-box">
+    <table class="table table-bordered text-center align-middle">
+        <thead>
+            <tr>
+                <th>Food Name</th>
+                <th>Price</th>
+                <th>Operation</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <!--modeldeki yemekleri teker teker yazdır , -->
+            @foreach (var food in Model.Foods) 
+            {
+                <tr>
+                    <td>@food.FoodName</td>
+                    <td>@string.Format("{0:N2} ₺", food.Price)</td>
+                    <td>
+                        <form asp-action="DeleteFood" method="post"> <!--admin controller deletedFood action-->
+                            <input type="hidden" name="foodId" value="@food.FoodId" />
+                            <button class="btn btn-danger btn-sm"
+                                    onclick="return confirm('Do you want to delete this meal?')">
+                                Delete
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<a asp-action="Restaurants" class="btn-back">← Back</a> <!--geri butonu restorant sayfasına döner-->

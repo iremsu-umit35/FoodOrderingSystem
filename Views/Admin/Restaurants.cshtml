@@ -1,0 +1,136 @@
+﻿@model List<FoodOrderingSystem.Models.Entities.Restaurant>
+@{
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    ViewData["Title"] = "Restoranlar";
+}
+
+<style>
+
+    /* Başlık */
+    h2 {
+        font-weight: 700;
+        color: #2c3e50;
+        margin-bottom: 20px;
+    }
+
+    /* Kutu görünümü */
+    .table-container {
+        background: #ffffff;
+        padding: 25px;
+        border-radius: 14px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.12);
+        margin-top: 30px;
+    }
+
+    /* Tablo üst başlık */
+    thead {
+        background: linear-gradient(90deg, #34495e, #2c3e50);
+        color: #fff;
+    }
+
+        thead th {
+            padding: 14px;
+            font-size: 14px;
+            text-align: center;
+            letter-spacing: .5px;
+        }
+
+    /* Tablonun kendisi */
+    table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0 8px;
+    }
+
+    tbody tr {
+        background: #fdfdfd;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+        transition: 0.25s;
+    }
+
+        /* Zebra */
+        tbody tr:nth-child(even) {
+            background: #f5f7fa;
+        }
+
+        /* Hover efekti */
+        tbody tr:hover {
+            transform: scale(1.01);
+            background: #eef6ff;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+    td {
+        padding: 14px;
+        text-align: center;
+        vertical-align: middle;
+        font-size: 15px;
+        color: #2c3e50;
+    }
+
+    /* Yıldız görünümü */
+    .star {
+        color: #f1c40f;
+        font-size: 18px;
+        margin-right: 4px;
+    }
+
+    /* Yemekleri gör butonu */
+    .btn-food {
+        background: #3498db;
+        border: none;
+        padding: 6px 12px;
+        color: white;
+        font-size: 13px;
+        border-radius: 6px;
+        transition: .2s;
+        text-decoration: none;
+    }
+
+        .btn-food:hover {
+            background: #217dbb;
+            transform: scale(1.05);
+        }
+
+</style>
+
+<!--admin retorantları listelelme sayfası-->
+<h2>📍 Restaurant List</h2>
+
+<div class="table-container">
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Restaurant</th>
+                <th>Owner</th>
+                <th>Address</th>
+                <th>Phone</th>
+                <th>Score</th>
+                <th>Operation</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var r in Model)
+            {
+                <tr>
+                    <td>@r.RestaurantName</td>
+                    <td>@r.User?.FullName</td>
+                    <td>@r.Address</td>
+                    <td>@r.Phone</td>
+                    <td><span class="star">⭐</span>@r.AverageRating</td>
+                    <td>
+                        <a asp-action="RestaurantFoods"
+                           asp-route-id="@r.RestaurantId"
+                           class="btn-food">See Foods</a> 
+                    </td>
+                </tr>
+            }
+            <!-- see fooda tıklayınca  restoranırn yemeklerini görür 
+
+            o ıdli restonanın yemeklerin gösterirr admin controller restaurantfoofs medonuna gider-->
+        </tbody>
+
+    </table>
+</div>
